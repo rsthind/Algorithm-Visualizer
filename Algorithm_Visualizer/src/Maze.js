@@ -10,6 +10,11 @@ tileH = 20;
 tileRowCount = 25;
 tileColumnCount = 40;
 
+dragok = false;
+
+boundX = 0;
+boundY = 0;
+
 var tiles = [];
 for (c = 0; c < tileColumnCount; c++) {
     tiles[c] = [];
@@ -58,7 +63,30 @@ function init() {
     return setInterval(draw, 10); //run function with timer
 }
 
+function myMove(e) {
+    x = e.pageX - canvas.offsetLeft;
+    y = e.pageY - canvas.offsetTop;
+
+    for (c = 0; c < tileColumnCount; c++) {
+        for (r = 0; r < tileRowCount; r++) {
+            if (c*(tileW + 3) < x && x < c*(tileW + 3) + tileW && r*(tileH + 3) < y && y < r*(tileH + 3)+tileH) {
+                if (tiles[c][r].state == 'e' && (c != boundX) || r != boundY) {
+                    tiles[c][r].state = 'w'; //wall
+                    boundX = c;
+                    boundY = r;
+                } else if (tiles[c][r].state == 'w' && (c != boundX) || r != boundY) {
+                    tiles[c][r].state = 'e'; //empty
+                    boundX = c;
+                    boundY = r;
+                }
+            }
+        }
+    }
+
+}
+
 function myDown(e) {
+    canvas.onmousemove = myMove;
 
     x = e.pageX - canvas.offsetLeft;
     y = e.pageY - canvas.offsetTop;
@@ -68,13 +96,22 @@ function myDown(e) {
             if (c*(tileW + 3) < x && x < c*(tileW + 3) + tileW && r*(tileH + 3) < y && y < r*(tileH + 3)+tileH) {
                 if (tiles[c][r].state == 'e') {
                     tiles[c][r].state = 'w'; //wall
+                    boundX = c;
+                    boundY = r;
                 } else if (tiles[c][r].state == 'w') {
                     tiles[c][r].state = 'e'; //empty
+                    boundX = c;
+                    boundY = r;
                 }
             }
         }
     }
 }
 
+function myUp() {
+    canvas.onmousemove = null;
+}
+
 init();
 canvas.onmousedown = myDown;
+canvas.onmouseup = myUp;
