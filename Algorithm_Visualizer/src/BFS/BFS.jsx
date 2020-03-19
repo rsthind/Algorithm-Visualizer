@@ -38,7 +38,11 @@ export default class BFS extends React.Component {
             const {canvasWidth, canvasHeight} = this.state.canvasSize;
             const ctx = this.canvasCoordinates.getContext("2d");
             ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-            this.drawNeighbors(this.Hex(q, r, s));
+            let currentDistanceLine = nextState.currentDistanceLine;
+            for (let i = 0; i <= currentDistanceLine.length - 1; i++) {
+                this.drawHex(this.canvasCoordinates, this.Point(currentDistanceLine[i].x, currentDistanceLine[i].y, "lime", 2));
+            }
+            //this.drawNeighbors(this.Hex(q, r, s));
             this.drawHex(this.canvasCoordinates, this.Point(x, y), "lime", 2);
             return true;
         }
@@ -94,7 +98,7 @@ export default class BFS extends React.Component {
             for (let q = -qLeftSide; q <= qRightSide; q++) {
                 const {x, y} = this.hexToPixel(this.Hex(q-p, r));
                 if ((x > hexWidth/2 && x < canvasWidth - hexWidth/2) && (y > hexHeight/2 && y < canvasHeight - hexHeight/2)) {
-                    this.drawHex(this.canvasHex, this.Point(x, y));
+                    this.drawHex(this.canvasHex, this.Point(x, y), "grey");
                     this.drawHexCoordinates(this.canvasHex, this.Point(x, y), this.Hex(q-p, r, -(q-p) - r));
                 }
             }
@@ -107,7 +111,7 @@ export default class BFS extends React.Component {
             for (let q = -qLeftSide; q <= qRightSide; q++) {
                 const {x, y} = this.hexToPixel(this.Hex(q+n, r));
                 if ((x > hexWidth/2 && x < canvasWidth - hexWidth/2) && (y > hexHeight/2 && y < canvasHeight - hexHeight/2)) {
-                    this.drawHex(this.canvasHex, this.Point(x, y));
+                    this.drawHex(this.canvasHex, this.Point(x, y), "grey");
                     this.drawHexCoordinates(this.canvasHex, this.Point(x, y), this.Hex(q+n, r, -(q+n) - r));
                 }
             }
@@ -147,7 +151,8 @@ export default class BFS extends React.Component {
         let offsetY = e.pageY - top;
         const {q, r, s} = this.cubeRound(this.pixeltoHex(this.Point(offsetX, offsetY)));
         const {x, y} = this.hexToPixel(this.Hex(q, r, s));
-        console.log(q, r, s, x, y);
+        this.getDistanceLine(this.Hex(0, 0, 0), this.Hex(q, r, s));
+        console.log(this.state.currentDistanceLine);
         this.drawHex(this.canvasCoordinates, this.Point(x, y), "green", 2);
         this.setState({
             currentHex: {q, r, s, x, y}
@@ -198,6 +203,10 @@ export default class BFS extends React.Component {
         return this.Hex(a.q + b.q, a.r + b.r, a.s + b.s);
     }
 
+    cubeSubstract(hexA, hexB) {
+        return this.Hex(hexA.q - hexB.q, hexA.r - hexB.r, hexA.s - hexB.s);
+    }
+
     getCubeNeighbor(h, direction) {
         return this.cubeAdd(h, this.cubeDirections(direction))
     }
@@ -208,6 +217,31 @@ export default class BFS extends React.Component {
             const {x, y} = this.hexToPixel(this.Hex(q, r, s));
             this.drawHex(this.canvasCoordinates, this.Point(x, y), "red", 2);
         }
+    }
+
+    cubeDistance(hexA, hexB) {
+        const {q, r, s} = this.cubeSubstract(hexA, hexB);
+        return (Math.abs(q) + Math.abs(r) + Math.abs(s)) / 2;
+    }
+
+    linearInt(a, b, t) {
+        return (a + (b - a) * t)
+    }
+
+    cubeLinearInt(hexA, hexB, t) {
+        return this.Hex(this.linearInt(hexA.q, hexB.q, t), this.linearInt(hexA.r, hexB.r, t), this.linearInt(hexA.s, hexB.s, t));
+    }
+
+    getDistanceLine(hexA, hexB) {
+        let dist = this.cubeDistance(hexA, hexB);
+        var arr = [];
+        for (let i = 0; i <= dist; i++) {
+            let center = this.hexToPixel(this.cubeRound(this.cubeLinearInt(hexA, hexB, 1.0/dist * i)));
+            arr = [].concat(arr, center);
+        }
+        this.setState({
+            currentDistanceLine: arr
+        })
     }
 
     render() {
