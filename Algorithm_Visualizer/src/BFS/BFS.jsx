@@ -253,9 +253,9 @@ export default class BFS extends React.Component {
 
     fillHex(canvasID, center, fillColor) {
         let c0 = this.getHexCornerCoord(center, 0);
-        let c1 = this.getHexCornerCoord(center, 0);
-        let c2 = this.getHexCornerCoord(center, 0);
-        let c3 = this.getHexCornerCoord(center, 0);
+        let c1 = this.getHexCornerCoord(center, 1);
+        let c2 = this.getHexCornerCoord(center, 2);
+        let c3 = this.getHexCornerCoord(center, 3);
         const ctx = canvasID.getContext("2d");
         ctx.beginPath();
         ctx.fillStyle = fillColor;
