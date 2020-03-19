@@ -13,8 +13,10 @@ export default class BFS extends React.Component {
     }
 
     componentWillMount() {
+        let hexParamters = this.getHexParameters();
         this.setState({
-            canvasSize: {canvasWidth: 800, canvasHeight: 600}
+            canvasSize: {canvasWidth: 800, canvasHeight: 600},
+            hexParamters: hexParamters
         })
     }
 
@@ -57,12 +59,20 @@ export default class BFS extends React.Component {
     }
 
     drawHexes() {
-        for (let r = -4; r <=4; r++) {
-            for (let q = -4; q <= 4; q++) {
+        const {canvasWidth, canvasHeight} = this.state.canvasSize;
+        const {hexWidth, hexHeight, vertDist, horizDist} = this.state.hexParamters;
+        const hexOrigin = this.state.hexOrigin;
+        let qLeftSide = Math.round(hexOrigin.x/hexWidth) * 4;
+        let qRightSide = Math.round(canvasWidth - hexOrigin.x) /hexWidth * 2;
+        let rTopSide = Math.round(hexOrigin.y/(hexHeight/2));
+        let rBottomSide = Math.round(canvasHeight - hexOrigin.y) / (hexHeight / 2);
+        for (let r = -rTopSide; r <= rBottomSide; r++) {
+            for (let q = -qLeftSide; q <= qRightSide; q++) {
                 let center = this.hexToPixel(this.Hex(q, r));
-                this.drawHex(this.canvasHex, center);
-                this.drawHexCoordinates(this.canvasHex, center, this.Hex(q, r));
-                console.log(center);
+                if ((center.x > hexWidth/2 && center.x < canvasWidth - hexWidth/2) && (center.y < canvasHeight - hexHeight/2)) {
+                    this.drawHex(this.canvasHex, center);
+                    this.drawHexCoordinates(this.canvasHex, center, this.Hex(q, r));
+                }
             }
         }
     }
@@ -82,6 +92,14 @@ export default class BFS extends React.Component {
         const ctx = canvasID.getContext("2d");
         ctx.fillText(h.q, center.x - 10, center.y);
         ctx.fillText(h.r, center.x + 7, center.y);
+    }
+
+    getHexParameters() {
+        let hexHeight = this.state.hexSize * 2;
+        let hexWidth = Math.sqrt(3)/2 * hexHeight;
+        let vertDist = hexHeight * 3/4;
+        let horizDist = hexWidth;
+        return {hexWidth, hexHeight, vertDist, horizDist}
     }
 
     render() {
