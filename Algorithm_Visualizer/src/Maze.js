@@ -11,8 +11,6 @@ tileH = 20;
 tileRowCount = 25;
 tileColumnCount = 40;
 
-dragok = false;
-
 boundX = 0;
 boundY = 0;
 
@@ -61,7 +59,7 @@ function draw() {
     }
 }
 
-function solveMaze() {
+function solveBFS() {
     var Xqueue = [0];
     var Yqueue = [0];
 
@@ -153,6 +151,108 @@ function solveMaze() {
     }
 }
 
+function findBiggestIndex(queue) {
+    var biggestIndex = 0;
+    for (var i = 0; i < queue.length; i++) {
+        if (queue[i][0] + queue[i][1] > queue[biggestIndex][0] + queue[biggestIndex][1]) {
+            biggestIndex = i;
+        }
+    }
+    return biggestIndex;
+}
+function solveA() {
+    var queue = [[0, 0]];
+
+    var pathFound = false;
+
+    var xLoc;
+    var yLoc;
+
+    while (queue.length > 0 && !pathFound) {
+        //xLoc = Xqueue.shift();
+        //yLoc = Yqueue.shift();
+
+        var index = findBiggestIndex(queue);
+        xLoc = queue[index][0];
+        yLoc = queue[index][1];
+
+        queue.splice(index, 1);
+
+        //checking for finish on neighbors
+        if (xLoc > 0) {
+            if (tiles[xLoc - 1][yLoc].state == 'f') {
+                pathFound = true;
+            }
+        }
+        if (xLoc < tileColumnCount - 1) {
+            if (tiles[xLoc + 1][yLoc].state == 'f') {
+                pathFound = true;
+            }
+        }
+        if (yLoc > 0) {
+            if (tiles[xLoc][yLoc - 1].state == 'f') {
+                pathFound = true;
+            }
+        }
+        if (yLoc < tileRowCount - 1) {
+            if (tiles[xLoc][yLoc + 1].state == 'f') {
+                pathFound = true;
+            }
+        }
+
+        //checking empty neighbors
+        if (xLoc > 0) {
+            if (tiles[xLoc - 1][yLoc].state == 'e') {
+                queue.push([xLoc - 1, yLoc]);
+                tiles[xLoc - 1][yLoc].state = tiles[xLoc][yLoc].state + 'l'; //going left
+            }
+        }
+        if (xLoc < tileColumnCount - 1) {
+            if (tiles[xLoc + 1][yLoc].state == 'e') {
+                queue.push([xLoc + 1, yLoc]);
+                tiles[xLoc + 1][yLoc].state = tiles[xLoc][yLoc].state + 'r'; //going right
+            }
+        }
+        if (yLoc > 0) {
+            if (tiles[xLoc][yLoc - 1].state == 'e') {
+                queue.push([xLoc, yLoc] - 1);
+                tiles[xLoc][yLoc - 1].state = tiles[xLoc][yLoc].state + 'u'; //going up
+            }
+        }
+        if (yLoc < tileRowCount - 1) {
+            if (tiles[xLoc][yLoc + 1].state == 'e') {
+                queue.push([xLoc, yLoc + 1]);
+                tiles[xLoc][yLoc + 1].state = tiles[xLoc][yLoc].state + 'd'; //going down
+            }
+        }
+    }
+
+    if (!pathFound) {
+        output.innerHTML = "No Solution";
+    } else {
+        output.innerHTML = "Solved";
+        var path = tiles[xLoc][yLoc].state;
+        var pathLength = path.length;
+        var currX = 0;
+        var currY = 0;
+        for (var i = 0; i < pathLength - 1; i++) {
+            if (path.charAt(i+1) == 'u') {
+                currY -= 1;
+            }
+            if (path.charAt(i+1) == 'd') {
+                currY += 1;
+            }
+            if (path.charAt(i+1) == 'r') {
+                currX += 1;
+            }
+            if (path.charAt(i+1) == 'l') {
+                currX -= 1;
+            }
+            tiles[currX][currY].state = 'x';
+        }
+    }
+}
+
 function reset() {
     for (c = 0; c < tileColumnCount; c++) {
         tiles[c] = [];
@@ -168,7 +268,6 @@ function reset() {
 
 function init() {
     canvas = document.getElementById("myCanvas");
-    //canvas.mousedown = myDown;
     context = canvas.getContext("2d");
     output = document.getElementById("outcome");
     return setInterval(draw, 10); //run function with timer
