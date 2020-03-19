@@ -6,9 +6,11 @@ export default class BFS extends React.Component {
     constructor(props) {
         super(props);
 
+        this.handleMouseMove = this.handleMouseMove.bind(this);
+
         this.state = {
             hexSize: 25,
-            hexOrigin: {x: 30, y: 30}
+            hexOrigin: {x: 400, y: 300}
         }
     }
 
@@ -24,6 +26,8 @@ export default class BFS extends React.Component {
         const {canvasWidth, canvasHeight} = this.state.canvasSize;
         this.canvasHex.width = canvasWidth;
         this.canvasHex.height = canvasHeight;
+        this.canvasCoordinates.width = canvasWidth;
+        this.canvasCoordinates.height = canvasHeight;
         this.drawHexes();
     }
 
@@ -120,10 +124,15 @@ export default class BFS extends React.Component {
         return {hexWidth, hexHeight, vertDist, horizDist}
     }
 
+    handleMouseMove(e) {
+        console.log(e.pageX, e.pageY);
+    }
+
     render() {
         return (
             <div className="BFS">
                 <canvas ref ={canvasHex => this.canvasHex = canvasHex }></canvas>
+                <canvas ref={canvasCoordinates => this.canvasCoordinates = canvasCoordinates} onMouseMove = {this.handleMouseMove}></canvas>
             </div>
         )
     }

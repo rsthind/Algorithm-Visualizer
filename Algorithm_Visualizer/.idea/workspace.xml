@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6c9a4500-c773-4547-b949-0f54101fba41" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/src/BFS/BFS.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/BFS/BFS.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/BFS/BFS.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/BFS/BFS.jsx" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -55,7 +56,7 @@
       <option name="presentableId" value="Default" />
       <updated>1584586925632</updated>
       <workItem from="1584586927015" duration="1758000" />
-      <workItem from="1584635209884" duration="3898000" />
+      <workItem from="1584635209884" duration="4639000" />
     </task>
     <servers />
   </component>
