@@ -1,5 +1,6 @@
 var canvas;
 var context;
+var output;
 
 var WIDTH = 1200;
 var HEIGHT = 800;
@@ -56,10 +57,38 @@ function draw() {
     }
 }
 
+function solveMaze() {
+    var Xqueue = [0];
+    var Yqueue = [0];
+
+    var pathFound = false;
+
+    var xLoc;
+    var yLoc;
+
+    while (Xqueue.length > 0 && !pathFound) {
+
+    }
+}
+
+function reset() {
+    for (c = 0; c < tileColumnCount; c++) {
+        tiles[c] = [];
+        for (r = 0; r < tileRowCount; r++) {
+            tiles[c][r] = {x: c*(tileW + 3), y: r*(tileH + 3), state: 'e'}; //state is e for empty
+        }
+    }
+    tiles[0][0].state = 's'; //start
+    tiles[tileColumnCount - 1][tileRowCount - 1].state = 'f'; //finish
+
+    output.innerHTML = '';
+}
+
 function init() {
     canvas = document.getElementById("myCanvas");
     //canvas.mousedown = myDown;
     context = canvas.getContext("2d");
+    output = document.getElementById("outcome");
     return setInterval(draw, 10); //run function with timer
 }
 
