@@ -28,11 +28,11 @@ tiles[tileColumnCount - 1][tileRowCount - 1].state = 'f'; //finish
 
 function rect(x, y, w, h, state) {
     if (state == 's') {
-        context.fillStyle = '#00FF00' //green
+        context.fillStyle = '#00FF00' //green - start
     } else if (state == 'f') {
-        context.fillStyle = '#FF0000' //red
+        context.fillStyle = '#FF0000' //red - finish
     } else if (state == 'e' ){
-        context.fillStyle = '#AAAAAA'; //gray
+        context.fillStyle = '#AAAAAA'; //gray - not visited
     } else if (state == 'w') {
         context.fillStyle = '#0000FF' //blue - wall
     } else if (state == 'x') {
