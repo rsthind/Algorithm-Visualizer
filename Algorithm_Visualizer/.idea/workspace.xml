@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6c9a4500-c773-4547-b949-0f54101fba41" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/BFS/BFS.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/BFS/BFS.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/BFS/BFS.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/BFS/BFS.jsx" afterDir="false" />
     </list>
@@ -32,6 +33,7 @@
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="nodejs_package_manager_path" value="npm" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -56,7 +58,7 @@
       <option name="presentableId" value="Default" />
       <updated>1584586925632</updated>
       <workItem from="1584586927015" duration="1758000" />
-      <workItem from="1584635209884" duration="4998000" />
+      <workItem from="1584635209884" duration="7244000" />
     </task>
     <servers />
   </component>
