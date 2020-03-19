@@ -38,7 +38,8 @@ export default class BFS extends React.Component {
             const {canvasWidth, canvasHeight} = this.state.canvasSize;
             const ctx = this.canvasCoordinates.getContext("2d");
             ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-            this.drawHex(this.canvasCoordinates, this.Point(x, y), "line", 2);
+            this.drawNeighbors(this.Hex(q, r, s));
+            this.drawHex(this.canvasCoordinates, this.Point(x, y), "lime", 2);
             return true;
         }
         return false;
@@ -94,7 +95,7 @@ export default class BFS extends React.Component {
                 const {x, y} = this.hexToPixel(this.Hex(q-p, r));
                 if ((x > hexWidth/2 && x < canvasWidth - hexWidth/2) && (y > hexHeight/2 && y < canvasHeight - hexHeight/2)) {
                     this.drawHex(this.canvasHex, this.Point(x, y));
-                    this.drawHexCoordinates(this.canvasHex, this.Point(x, y), this.Hex(q-p, r, -q-r));
+                    this.drawHexCoordinates(this.canvasHex, this.Point(x, y), this.Hex(q-p, r, -(q-p) - r));
                 }
             }
         }
@@ -107,7 +108,7 @@ export default class BFS extends React.Component {
                 const {x, y} = this.hexToPixel(this.Hex(q+n, r));
                 if ((x > hexWidth/2 && x < canvasWidth - hexWidth/2) && (y > hexHeight/2 && y < canvasHeight - hexHeight/2)) {
                     this.drawHex(this.canvasHex, this.Point(x, y));
-                    this.drawHexCoordinates(this.canvasHex, this.Point(x, y), this.Hex(q+n, r, -q-r));
+                    this.drawHexCoordinates(this.canvasHex, this.Point(x, y), this.Hex(q+n, r, -(q+n) - r));
                 }
             }
         }
@@ -186,6 +187,27 @@ export default class BFS extends React.Component {
         }
 
         return this.Hex(rx, ry, rz)
+    }
+
+    cubeDirections(direction) {
+        const cubeDirection = [this.Hex(1, 0, -1), this.Hex(0, -1, 1), this.Hex(-1, 0, 1), this.Hex(0, 1, -1)];
+        return cubeDirection[direction];
+
+    }
+    cubeAdd(a, b) {
+        return this.Hex(a.q + b.q, a.r + b.r, a.s + b.s);
+    }
+
+    getCubeNeighbor(h, direction) {
+        return this.cubeAdd(h, this.cubeDirections(direction))
+    }
+
+    drawNeighbors(h) {
+        for (let i = 0; i < 4; i++) {
+            const {q, r, s} = this.getCubeNeighbor(this.Hex(h.q, h.r, h.s), i);
+            const {x, y} = this.hexToPixel(this.Hex(q, r, s));
+            this.drawHex(this.canvasCoordinates, this.Point(x, y), "red", 2);
+        }
     }
 
     render() {
