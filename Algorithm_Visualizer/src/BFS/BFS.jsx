@@ -134,7 +134,7 @@ export default class BFS extends React.Component {
             canvasPosition: {left: rect.left, right: rect.right, top: rect.top, bottom: rect.bottom}
         })
     }
-    
+
     render() {
         return (
             <div className="BFS">
