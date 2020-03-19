@@ -128,6 +128,13 @@ export default class BFS extends React.Component {
         console.log(e.pageX, e.pageY);
     }
 
+    getCanvasPosition(canvasID) {
+        let rect = canvasID.getBoundingClientRect();
+        this.setState({
+            canvasPosition: {left: rect.left, right: rect.right, top: rect.top, bottom: rect.bottom}
+        })
+    }
+    
     render() {
         return (
             <div className="BFS">
