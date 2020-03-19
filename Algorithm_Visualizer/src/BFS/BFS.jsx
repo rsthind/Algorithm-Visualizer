@@ -40,7 +40,7 @@ export default class BFS extends React.Component {
             ctx.clearRect(0, 0, canvasWidth, canvasHeight);
             let currentDistanceLine = nextState.currentDistanceLine;
             for (let i = 0; i <= currentDistanceLine.length - 1; i++) {
-                this.drawHex(this.canvasCoordinates, this.Point(currentDistanceLine[i].x, currentDistanceLine[i].y, "lime", 2));
+                this.drawHex(this.canvasCoordinates, this.Point(currentDistanceLine[i].x, currentDistanceLine[i].y), "lime", 2);
             }
             //this.drawNeighbors(this.Hex(q, r, s));
             this.drawHex(this.canvasCoordinates, this.Point(x, y), "lime", 2);
@@ -99,7 +99,7 @@ export default class BFS extends React.Component {
                 const {x, y} = this.hexToPixel(this.Hex(q-p, r));
                 if ((x > hexWidth/2 && x < canvasWidth - hexWidth/2) && (y > hexHeight/2 && y < canvasHeight - hexHeight/2)) {
                     this.drawHex(this.canvasHex, this.Point(x, y), "grey");
-                    this.drawHexCoordinates(this.canvasHex, this.Point(x, y), this.Hex(q-p, r, -(q-p) - r));
+                    //this.drawHexCoordinates(this.canvasHex, this.Point(x, y), this.Hex(q-p, r, -(q-p) - r));
                 }
             }
         }
@@ -112,7 +112,7 @@ export default class BFS extends React.Component {
                 const {x, y} = this.hexToPixel(this.Hex(q+n, r));
                 if ((x > hexWidth/2 && x < canvasWidth - hexWidth/2) && (y > hexHeight/2 && y < canvasHeight - hexHeight/2)) {
                     this.drawHex(this.canvasHex, this.Point(x, y), "grey");
-                    this.drawHexCoordinates(this.canvasHex, this.Point(x, y), this.Hex(q+n, r, -(q+n) - r));
+                    //this.drawHexCoordinates(this.canvasHex, this.Point(x, y), this.Hex(q+n, r, -(q+n) - r));
                 }
             }
         }
@@ -146,6 +146,8 @@ export default class BFS extends React.Component {
 
     handleMouseMove(e) {
         const {left, right, top, bottom} = this.state.canvasPosition;
+        const {canvasWidth, canvasHeight} = this.state.canvasSize;
+        const {hexWidth, hexHeight, vertDist, horizDist} = this.state.hexParamters;
         console.log(e.pageX, e.pageY);
         let offsetX = e.pageX - left;
         let offsetY = e.pageY - top;
@@ -153,10 +155,11 @@ export default class BFS extends React.Component {
         const {x, y} = this.hexToPixel(this.Hex(q, r, s));
         this.getDistanceLine(this.Hex(0, 0, 0), this.Hex(q, r, s));
         console.log(this.state.currentDistanceLine);
-        this.drawHex(this.canvasCoordinates, this.Point(x, y), "green", 2);
-        this.setState({
-            currentHex: {q, r, s, x, y}
-        })
+        if ((x > hexWidth /2 && x < canvasWidth - hexWidth/2) && (y > hexHeight /2 && y < canvasHeight - hexHeight/2)) {
+            this.setState({
+                currentHex: {q, r, s, x, y}
+            })
+        }
     }
 
     getCanvasPosition(canvasID) {
