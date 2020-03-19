@@ -59,6 +59,38 @@ function draw() {
     }
 }
 
+function check(xLoc, yLoc, Xqueue, Yqueue) {
+    //checking empty neighbors
+    if (xLoc > 0) {
+        if (tiles[xLoc - 1][yLoc].state == 'e') {
+            Xqueue.push(xLoc - 1);
+            Yqueue.push(yLoc);
+            tiles[xLoc - 1][yLoc].state = tiles[xLoc][yLoc].state + 'l'; //going left
+        }
+    }
+    if (xLoc < tileColumnCount - 1) {
+        if (tiles[xLoc + 1][yLoc].state == 'e') {
+            Xqueue.push(xLoc + 1);
+            Yqueue.push(yLoc);
+            tiles[xLoc + 1][yLoc].state = tiles[xLoc][yLoc].state + 'r'; //going right
+        }
+    }
+    if (yLoc > 0) {
+        if (tiles[xLoc][yLoc - 1].state == 'e') {
+            Xqueue.push(xLoc);
+            Yqueue.push(yLoc - 1);
+            tiles[xLoc][yLoc - 1].state = tiles[xLoc][yLoc].state + 'u'; //going up
+        }
+    }
+    if (yLoc < tileRowCount - 1) {
+        if (tiles[xLoc][yLoc + 1].state == 'e') {
+            Xqueue.push(xLoc);
+            Yqueue.push(yLoc + 1);
+            tiles[xLoc][yLoc + 1].state = tiles[xLoc][yLoc].state + 'd'; //going down
+        }
+    }
+}
+
 function solveBFS() {
     var Xqueue = [0];
     var Yqueue = [0];
@@ -95,34 +127,7 @@ function solveBFS() {
         }
 
         //checking empty neighbors
-        if (xLoc > 0) {
-            if (tiles[xLoc - 1][yLoc].state == 'e') {
-                Xqueue.push(xLoc - 1);
-                Yqueue.push(yLoc);
-                tiles[xLoc - 1][yLoc].state = tiles[xLoc][yLoc].state + 'l'; //going left
-            }
-        }
-        if (xLoc < tileColumnCount - 1) {
-            if (tiles[xLoc + 1][yLoc].state == 'e') {
-                Xqueue.push(xLoc + 1);
-                Yqueue.push(yLoc);
-                tiles[xLoc + 1][yLoc].state = tiles[xLoc][yLoc].state + 'r'; //going right
-            }
-        }
-        if (yLoc > 0) {
-            if (tiles[xLoc][yLoc - 1].state == 'e') {
-                Xqueue.push(xLoc);
-                Yqueue.push(yLoc - 1);
-                tiles[xLoc][yLoc - 1].state = tiles[xLoc][yLoc].state + 'u'; //going up
-            }
-        }
-        if (yLoc < tileRowCount - 1) {
-            if (tiles[xLoc][yLoc + 1].state == 'e') {
-                Xqueue.push(xLoc);
-                Yqueue.push(yLoc + 1);
-                tiles[xLoc][yLoc + 1].state = tiles[xLoc][yLoc].state + 'd'; //going down
-            }
-        }
+        check(xLoc, yLoc, Xqueue, Yqueue);
     }
 
     if (!pathFound) {
