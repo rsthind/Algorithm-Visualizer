@@ -34,7 +34,11 @@ function rect(x, y, w, h, state) {
     } else if (state == 'e' ){
         context.fillStyle = '#AAAAAA'; //gray
     } else if (state == 'w') {
-        context.fillStyle = '#0000FF' //blue
+        context.fillStyle = '#0000FF' //blue - wall
+    } else if (state == 'x') {
+        context.fillStyle = '#000000' //black - shortest path
+    } else  {
+        context.fillStyle = '#FFFF00' //yellow - visited areas
     }
 
     context.beginPath();
@@ -67,7 +71,85 @@ function solveMaze() {
     var yLoc;
 
     while (Xqueue.length > 0 && !pathFound) {
+        xLoc = Xqueue.shift();
+        yLoc = Yqueue.shift();
 
+        //checking for finish on neighbors
+        if (xLoc > 0) {
+            if (tiles[xLoc - 1][yLoc].state == 'f') {
+                pathFound = true;
+            }
+        }
+        if (xLoc < tileColumnCount - 1) {
+            if (tiles[xLoc + 1][yLoc].state == 'f') {
+                pathFound = true;
+            }
+        }
+        if (yLoc > 0) {
+            if (tiles[xLoc][yLoc - 1].state == 'f') {
+                pathFound = true;
+            }
+        }
+        if (yLoc < tileRowCount - 1) {
+            if (tiles[xLoc][yLoc + 1].state == 'f') {
+                pathFound = true;
+            }
+        }
+
+        //checking empty neighbors
+        if (xLoc > 0) {
+            if (tiles[xLoc - 1][yLoc].state == 'e') {
+                Xqueue.push(xLoc - 1);
+                Yqueue.push(yLoc);
+                tiles[xLoc - 1][yLoc].state = tiles[xLoc][yLoc].state + 'l'; //going left
+            }
+        }
+        if (xLoc < tileColumnCount - 1) {
+            if (tiles[xLoc + 1][yLoc].state == 'e') {
+                Xqueue.push(xLoc + 1);
+                Yqueue.push(yLoc);
+                tiles[xLoc + 1][yLoc].state = tiles[xLoc][yLoc].state + 'r'; //going right
+            }
+        }
+        if (yLoc > 0) {
+            if (tiles[xLoc][yLoc - 1].state == 'e') {
+                Xqueue.push(xLoc);
+                Yqueue.push(yLoc - 1);
+                tiles[xLoc][yLoc - 1].state = tiles[xLoc][yLoc].state + 'u'; //going up
+            }
+        }
+        if (yLoc < tileRowCount - 1) {
+            if (tiles[xLoc][yLoc + 1].state == 'e') {
+                Xqueue.push(xLoc);
+                Yqueue.push(yLoc + 1);
+                tiles[xLoc][yLoc + 1].state = tiles[xLoc][yLoc].state + 'd'; //going down
+            }
+        }
+    }
+
+    if (!pathFound) {
+        output.innerHTML = "No Solution";
+    } else {
+        output.innerHTML = "Solved";
+        var path = tiles[xLoc][yLoc].state;
+        var pathLength = path.length;
+        var currX = 0;
+        var currY = 0;
+        for (var i = 0; i < pathLength - 1; i++) {
+            if (path.charAt(i+1) == 'u') {
+                currY -= 1;
+            }
+            if (path.charAt(i+1) == 'd') {
+                currY += 1;
+            }
+            if (path.charAt(i+1) == 'r') {
+                currX += 1;
+            }
+            if (path.charAt(i+1) == 'l') {
+                currX -= 1;
+            }
+            tiles[currX][currY].state = 'x';
+        }
     }
 }
 
