@@ -29,30 +29,50 @@ export default class AlgorithmVisualizer extends Component {
         this.setState({nodes})
     }
 
+    visualizeDijkstra() {
+        const {grid} = this.state;
+        const startNode = grid[START_NODE_ROW][START_NODE_COL];
+        const finishNode = grid[FINISH_NODE_ROW][FINISH_NODE_COL];
+        const visitedNodesInOrder = dijkstra(grid, startNode, finishNode);
+        const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
+        this.animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder);
+    }
+
     render() {
-        const {nodes} = this.state;
-        console.log(nodes);
+        const {grid, mouseIsPressed} = this.state;
 
         return (
-            <div className="grid">
-                {nodes.map((row, rowIdx) => {
-                    return (
-                        <div key={rowIdx}>
-                            {row.map((node, nodeIdx) => {
-                                const {isStart, isFinish} = node;
-                                return (
-                                    <Node
-                                        key={nodeIdx}
-                                        isStart={isStart}
-                                        isFinish={isFinish}
-                                        test={'foo'}
-                                        test={'kappa'}></Node>
-                                );
-                            })}
-                        </div>
-                    );
-                })}
-            </div>
+            <>
+                <button onClick={() => this.visualizeDijkstra()}>
+                    Visualize Dijkstra's Algorithm
+                </button>
+                <div className="grid">
+                    {grid.map((row, rowIdx) => {
+                        return (
+                            <div key={rowIdx}>
+                                {row.map((node, nodeIdx) => {
+                                    const {row, col, isFinish, isStart, isWall} = node;
+                                    return (
+                                        <Node
+                                            key={nodeIdx}
+                                            col={col}
+                                            isStart={isStart}
+                                            isFinish={isFinish}
+                                            isWall={isWall}
+                                            mouseIsPressed={mouseIsPressed}
+                                            onMouseDown={(row, col) => this.handleMouseDown(row, col)}
+                                            onMouseEnter={(row, col) =>
+                                                this.handleMouseEnter(row, col)
+                                            }
+                                            onMouseUp={() => this.handleMouseUp()}
+                                            row={row}></Node>
+                                    );
+                                })}
+                            </div>
+                        );
+                    })}
+                </div>
+            </>
         );
     }
 }
