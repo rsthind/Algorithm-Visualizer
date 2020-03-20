@@ -2,6 +2,8 @@ import React, {Component} from "react";
 import ReactDOM from 'react-dom';
 import './BFS.css';
 
+var DUMMY = []
+
 export default class BFS extends React.Component {
     constructor(props) {
         super(props);
@@ -11,7 +13,11 @@ export default class BFS extends React.Component {
         this.state = {
             hexSize: 25,
             hexOrigin: {x: 400, y: 300},
-            obstacles: []
+            obstacles: DUMMY,
+            playerPosition: {q: 0, r: 0, s: 0},
+            cameFrom: {},
+            hexPath: [],
+            path: []
         }
     }
 
@@ -31,6 +37,7 @@ export default class BFS extends React.Component {
         this.canvasInteraction.height = canvasHeight;
         this.getCanvasPosition(this.canvasInteraction);
         this.drawHexes();
+        this.drawObstacles();
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -278,19 +285,11 @@ export default class BFS extends React.Component {
         this.addObstacles();
     }
 
-    addObstacles() {
-        let obstacles = this.state.obstacles;
-        if (!obstacles.includes(JSON.stringify(this.state.currentHex))) {
-            obstacles = [].concat(obstacles, JSON.stringify(this.state.currentHex));
-        } else {
-            obstacles.map((l, i) => {
-                if (l == JSON.stringify(this.state.currentHex)) {
-                    obstacles = obstacles.slice(0, i).concat(obstacles.slice(i+1));
-                }
-            })
-        }
-        this.setState({
-            obstacles: obstacles
+    drawObstacles() {
+        this.state.obstacles.map((l) => {
+            const {q, r, s} = JSON.parse(l);
+            const {x, y} = this.hexToPixel(this.Hex(q, r, s));
+            this.drawHex(this.canvasHex, this.Point(x, y), 1, "black", "black")
         })
     }
 
