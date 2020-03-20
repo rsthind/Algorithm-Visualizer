@@ -1,14 +1,14 @@
 export function dijkstra(grid, startNode, finishNode) {
     const visitedNodesInOrder = [];
-    nodes[startNode].distance = 0;
-    const unvisitedNodes = node.slice();
+    startNode.distance = 0;
+    const unvisitedNodes = getAllNodes(grid);
     while (!!unvisitedNodes.length) {
         sortNodesByDistance(unvisitedNodes);
-        const closestNode = unvisitedNodes.unshift();
+        const closestNode = unvisitedNodes.shift();
 
         closestNode.isVisited = true;
-        if (closestNode === finishNode) return 'success';
-        updateNeighbors(closestNode, grid);
+        if (closestNode === finishNode) return visitedNodesInOrder;
+        updateUnvisitedNeighbors(closestNode, grid);
     }
 }
 
@@ -16,14 +16,15 @@ function sortNodesByDistance(unvisitedNodes) {
     unvisitedNodes.sort((nodeA, nodeB) => nodeA.distance - nodeB.distance);
 }
 
-function updateNeighbors(node, grid) {
-    const neighbors = getNeighbors(node, grid);
-    for (const neighbor of neighbors) {
+function updateUnvisitedNeighbors(node, grid) {
+    const unvisitedNeighbors = getUnvisitedNeighbors(node, grid);
+    for (const neighbor of unvisitedNeighbors) {
         neighbor.distance = node.distance + 1;
+        neighbor.previousNode = node;
     }
 }
 
-function getNeighbors(node, grid) {
+function getUnvisitedNeighbors(node, grid) {
     const neighbors = [];
     const {col, row} = node;
     if (row > 0) {
