@@ -1,14 +1,5 @@
-const node = {
-    row,
-    col,
-    isVisited,
-    distance,
-};
-
-function dijkstra(grid, startNode, finishNode) {
-    if (!startNode || !finishNode || startNode == finishNode) {
-        return false;
-    }
+export function dijkstra(grid, startNode, finishNode) {
+    const visitedNodesInOrder = [];
     nodes[startNode].distance = 0;
     const unvisitedNodes = node.slice();
     while (!!unvisitedNodes.length) {

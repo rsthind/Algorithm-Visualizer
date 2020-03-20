@@ -1,32 +1,44 @@
 import React, {Component} from 'react';
 import Node from './Node/Node';
 
+import {dijkstra, getNodesInShortestPathOrder} from './Algorithms/dijkstra';
+
 import './AlgorithmVisualizer.css';
+
+const START_NODE_ROW = 10;
+const START_NODE_COL = 15;
+const FINISH_NODE_ROW = 10;
+const FINISH_NODE_COL = 35;
 
 export default class AlgorithmVisualizer extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            nodes: [],
-        }
+            grid: [],
+            mouseIsPressed: false,
+        };
     }
 
     componentDidMount() {
-        const nodes = [];
-        for (let row = 0; row < 20; row++) {
-            const currentRow = [];
-            for (let col = 0; col < 50; col++) {
-                const currentNode = {
-                    col,
-                    row,
-                    isStart: row === 10 && col === 5,
-                    isFinish: row === 10 && col === 45,
-                };
-                currentRow.push(currentNode);
-            }
-            nodes.push(currentRow);
+        const grid = getInitialGrid();
+        this.setState({grid})
+    }
+
+    handleMouseDown(row, col) {
+        const newGrid = getNewGridWithWallToggled(this.state.grid, row, col);
+        this.setState({grid: newGrid, mouseIsPressed: true});
+    }
+
+    handleMouseEnter(row, col) {
+        if (!this.state.mouseIsPressed) {
+            return;
         }
-        this.setState({nodes})
+        const newGrid = getNewGridWithWallToggled(this.state.grid, row, col);
+        this.setState({grid: newGrid});
+    }
+
+    handleMouseUp() {
+        this.setState({mouseIsPressed: false});
     }
 
     visualizeDijkstra() {
