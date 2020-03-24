@@ -1,13 +1,13 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import Node from './Node/Node';
 import {dijkstra, getNodesInShortestPathOrder} from './Algorithms/dijkstra';
 
 import './AlgorithmVisualizer.css';
 
-const START_NODE_ROW = 10;
-const START_NODE_COL = 15;
-const FINISH_NODE_ROW = 10;
-const FINISH_NODE_COL = 35;
+var START_NODE_ROW = 10;
+var START_NODE_COL = 15;
+var FINISH_NODE_ROW = 10;
+var FINISH_NODE_COL = 35;
 
 export default class PathfindingVisualizer extends Component {
     constructor() {
@@ -16,6 +16,62 @@ export default class PathfindingVisualizer extends Component {
             grid: [],
             mouseIsPressed: false,
         };
+    }
+
+
+    moveStartUp(dir) {
+        if (dir == 0) {
+            START_NODE_ROW += 1;
+        } else if (dir == 1) {
+            START_NODE_ROW -= 1;
+        }
+        else if (dir == 2) {
+            START_NODE_COL += 1;
+        }
+        else if (dir == 3) {
+            START_NODE_COL -= 1;
+        }
+        
+        const grid = getInitialGrid();
+        this.setState({ grid });
+    }
+
+    moveEndUp(dir) {
+        if (dir == 0) {
+            FINISH_NODE_ROW += 1;
+        } else if (dir == 1) {
+            FINISH_NODE_ROW -= 1;
+        }
+        else if (dir == 2) {
+            FINISH_NODE_COL += 1;
+        }
+        else if (dir == 3) {
+            FINISH_NODE_COL -= 1;
+        }
+
+        const grid = getInitialGrid();
+        this.setState({ grid });
+    }
+    moveStartDown() {
+        alert(START_NODE_COL);
+        START_NODE_ROW += 1;
+        alert(START_NODE_COL);
+        const grid = getInitialGrid();
+        this.setState({ grid });
+    }
+    moveStartLeft() {
+        alert(START_NODE_COL);
+        START_NODE_ROW += 1;
+        alert(START_NODE_COL);
+        const grid = getInitialGrid();
+        this.setState({ grid });
+    }
+    moveStartRight() {
+        alert(START_NODE_COL);
+        START_NODE_ROW += 1;
+        alert(START_NODE_COL);
+        const grid = getInitialGrid();
+        this.setState({ grid });
     }
 
     componentDidMount() {
@@ -86,9 +142,48 @@ export default class PathfindingVisualizer extends Component {
                 <button onClick={() => this.visualizeDijkstra()}>
                     Visualize Dijkstra's Algorithm
                 </button>
+
                 <button onClick={() => this.componentDidMount()}>
                     Reset
                 </button>
+
+                <button onClick={() => this.moveStartUp(1)}>
+                    Move Start Node Up
+                </button>
+
+                <button onClick={() => this.moveStartUp(0)}>
+                    Move Start Node Down
+                </button>
+                        
+                <button onClick={() => this.moveStartUp(2)}>
+                    Move Start Node Right
+                </button>
+
+                <button onClick={() => this.moveStartUp(3)}>
+                    Move Start Node Left
+                </button>
+
+
+
+
+                <button onClick={() => this.moveEndUp(1)}>
+                    Move End Node Up
+                </button>
+
+                <button onClick={() => this.moveEndUp(0)}>
+                    Move End Node Down
+                </button>
+
+                <button onClick={() => this.moveEndUp(2)}>
+                    Move End Node Right
+                </button>
+
+                <button onClick={() => this.moveEndUp(3)}>
+                    Move End Node Left
+                </button>
+
+                
+
                 <div className="grid">
                     {grid.map((row, rowIdx) => {
                         return (
