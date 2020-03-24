@@ -5,6 +5,13 @@
     display: inline-block;
 }
 
+.node-reset {
+    width: 25px;
+    height: 25px;
+    outline: 1px solid rgb(175, 216, 248);
+    display: inline-block;
+    background-color: white;
+}
 .node-finish {
     background-color: red;
 }
