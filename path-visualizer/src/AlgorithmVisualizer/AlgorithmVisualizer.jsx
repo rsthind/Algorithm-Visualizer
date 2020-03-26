@@ -15,7 +15,8 @@ export default class PathfindingVisualizer extends Component {
         this.state = {
             grid: [],
             mouseIsPressed: false,
-            visitedNodes: []
+            visitedNodes: [],
+            wallNodes: []
         };
     }
 
@@ -25,63 +26,6 @@ export default class PathfindingVisualizer extends Component {
             grid: grid,
             visitedNodes: grid
         });
-        this.reset();
-    }
-
-
-    moveStartUp(dir) {
-        if (dir === 0) {
-            START_NODE_ROW += 1;
-        } else if (dir === 1) {
-            START_NODE_ROW -= 1;
-        }
-        else if (dir === 2) {
-            START_NODE_COL += 1;
-        }
-        else if (dir === 3) {
-            START_NODE_COL -= 1;
-        }
-        
-        const grid = getInitialGrid();
-        this.setState({ grid });
-    }
-
-    moveEndUp(dir) {
-        if (dir === 0) {
-            FINISH_NODE_ROW += 1;
-        } else if (dir === 1) {
-            FINISH_NODE_ROW -= 1;
-        }
-        else if (dir === 2) {
-            FINISH_NODE_COL += 1;
-        }
-        else if (dir === 3) {
-            FINISH_NODE_COL -= 1;
-        }
-
-        const grid = getInitialGrid();
-        this.setState({ grid });
-    }
-    moveStartDown() {
-        alert(START_NODE_COL);
-        START_NODE_ROW += 1;
-        alert(START_NODE_COL);
-        const grid = getInitialGrid();
-        this.setState({ grid });
-    }
-    moveStartLeft() {
-        alert(START_NODE_COL);
-        START_NODE_ROW += 1;
-        alert(START_NODE_COL);
-        const grid = getInitialGrid();
-        this.setState({ grid });
-    }
-    moveStartRight() {
-        alert(START_NODE_COL);
-        START_NODE_ROW += 1;
-        alert(START_NODE_COL);
-        const grid = getInitialGrid();
-        this.setState({ grid });
     }
 
     handleMouseDown(row, col) {
@@ -97,6 +41,49 @@ export default class PathfindingVisualizer extends Component {
 
     handleMouseUp() {
         this.setState({mouseIsPressed: false});
+    }
+
+
+    handleKeyDown(row, col, e){
+        const node = this.state.grid[row][col];
+        let rowNew = row;
+        let colNew = col;
+        if(node.isSelected){
+            if(e.keyCode === 37){
+                colNew -= 1;
+            }
+            else if(e.keyCode === 38){
+                rowNew -= 1;
+            }
+            else if(e.keyCode === 39){
+                colNew += 1;
+            }
+            else if(e.keyCode === 40){
+                rowNew += 1;
+            }
+            if(node.isStart){
+                START_NODE_ROW = rowNew;
+                START_NODE_COL = colNew;
+            }
+            else if(node.isFinish){
+                FINISH_NODE_ROW = rowNew;
+                FINISH_NODE_COL = colNew;
+            }
+        }
+        const grid = getInitialGrid();
+        this.setState({
+            grid: grid,
+            visitedNodes: grid
+        });
+        const newNode = grid[rowNew][colNew];
+        if(newNode.isStart){
+            document.getElementById(`node-${newNode.row}-${newNode.col}`).className =
+                'node node-highlightedStart';
+        }
+        else if(newNode.isFinish){
+            document.getElementById(`node-${newNode.row}-${newNode.col}`).className =
+                'node node-highlightedFinish';
+        }
     }
 
     animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder) {
@@ -168,63 +155,30 @@ export default class PathfindingVisualizer extends Component {
                     Reset Grid
                 </button>
 
-                <button onClick={() => this.moveStartUp(1)}>
-                    Move Start Node Up
-                </button>
 
-                <button onClick={() => this.moveStartUp(0)}>
-                    Move Start Node Down
-                </button>
-                        
-                <button onClick={() => this.moveStartUp(2)}>
-                    Move Start Node Right
-                </button>
-
-                <button onClick={() => this.moveStartUp(3)}>
-                    Move Start Node Left
-                </button>
-
-
-
-
-                <button onClick={() => this.moveEndUp(1)}>
-                    Move End Node Up
-                </button>
-
-                <button onClick={() => this.moveEndUp(0)}>
-                    Move End Node Down
-                </button>
-
-                <button onClick={() => this.moveEndUp(2)}>
-                    Move End Node Right
-                </button>
-
-                <button onClick={() => this.moveEndUp(3)}>
-                    Move End Node Left
-                </button>
-
-                
 
                 <div className="grid">
                     {grid.map((row, rowIdx) => {
                         return (
                             <div key={rowIdx}>
                                 {row.map((node, nodeIdx) => {
-                                    const {row, col, isFinish, isStart, isWall} = node;
+                                    const {row, col, isFinish, isStart, isWall, isSelected} = node;
                                     return (
                                         <Node
-                                            key={nodeIdx}
-                                            col={col}
-                                            isFinish={isFinish}
-                                            isStart={isStart}
-                                            isWall={isWall}
-                                            mouseIsPressed={mouseIsPressed}
-                                            onMouseDown={(row, col) => this.handleMouseDown(row, col)}
-                                            onMouseEnter={(row, col) =>
-                                                this.handleMouseEnter(row, col)
-                                            }
-                                            onMouseUp={() => this.handleMouseUp()}
-                                            row={row}></Node>
+    key={nodeIdx}
+    col={col}
+    isFinish={isFinish}
+    isStart={isStart}
+    isWall={isWall}
+    isSelected = {isSelected}
+    mouseIsPressed={mouseIsPressed}
+    onMouseDown={(row, col) => this.handleMouseDown(row, col)}
+    onMouseEnter={(row, col) =>
+        this.handleMouseEnter(row, col)
+    }
+    onMouseUp={() => this.handleMouseUp()}
+    onKeyDown = {(row, col, e) => this.handleKeyDown(row, col, e)}
+    row={row}/>
                                     );
                                 })}
                             </div>
@@ -264,7 +218,28 @@ const getNewGridWithWallToggled = (grid, row, col) => {
     const newNode = {
         ...node,
         isWall: !node.isWall,
+        isSelected: !node.isSelected
     };
+    if(node.isStart){
+        if(newNode.isSelected) {
+            document.getElementById(`node-${newNode.row}-${newNode.col}`).className =
+                'node node-highlightedStart';
+        }
+        else{
+            document.getElementById(`node-${newNode.row}-${newNode.col}`).className =
+                'node node-start';
+        }
+    }
+    if(node.isFinish){
+        if(newNode.isSelected) {
+            document.getElementById(`node-${newNode.row}-${newNode.col}`).className =
+                'node node-highlightedFinish';
+        }
+        else{
+            document.getElementById(`node-${newNode.row}-${newNode.col}`).className =
+                'node node-finish';
+        }
+    }
     newGrid[row][col] = newNode;
     return newGrid;
 };

@@ -28,6 +28,16 @@
     animation-fill-mode: forwards;
 }
 
+.node-highlightedStart {
+    background-color: green;
+    outline: 3px solid rgb(175, 216, 248);
+}
+
+.node-highlightedFinish {
+    background-color: red;
+    outline: 3px solid rgb(175, 216, 248);
+}
+
 @keyframes visitedAnimation {
     0% {
         background-color: rgba(147, 0, 8, 0.75);

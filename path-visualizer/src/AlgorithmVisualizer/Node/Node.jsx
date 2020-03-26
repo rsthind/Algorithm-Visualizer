@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 
 import './Node.css';
 
+
 export default class Node extends Component {
     render() {
         const {
@@ -12,6 +13,7 @@ export default class Node extends Component {
             onMouseDown,
             onMouseEnter,
             onMouseUp,
+            onKeyDown,
             row,
         } = this.props;
         const extraClassName = isFinish
@@ -28,7 +30,11 @@ export default class Node extends Component {
                 className={`node ${extraClassName}`}
                 onMouseDown={() => onMouseDown(row, col)}
                 onMouseEnter={() => onMouseEnter(row, col)}
-                onMouseUp={() => onMouseUp()}></div>
+                onMouseUp={() => onMouseUp()}
+                onKeyDown={(e) => onKeyDown(row, col, e)}
+                tabIndex = {0}>
+            </div>
         );
     }
+
 }
