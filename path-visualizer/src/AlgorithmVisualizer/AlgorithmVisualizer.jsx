@@ -45,10 +45,10 @@ export default class PathfindingVisualizer extends Component {
 
 
     handleKeyDown(row, col, e){
-        const node = this.state.grid[row][col];
+        const nodeInitial = this.state.grid[row][col];
         let rowNew = row;
         let colNew = col;
-        if(node.isSelected){
+        if(nodeInitial.isSelected){
             if(e.keyCode === 37){
                 colNew -= 1;
             }
@@ -60,30 +60,38 @@ export default class PathfindingVisualizer extends Component {
             }
             else if(e.keyCode === 40){
                 rowNew += 1;
+
             }
-            if(node.isStart){
+            if(nodeInitial.isStart){
                 START_NODE_ROW = rowNew;
                 START_NODE_COL = colNew;
             }
-            else if(node.isFinish){
+            else if(nodeInitial.isFinish){
                 FINISH_NODE_ROW = rowNew;
                 FINISH_NODE_COL = colNew;
             }
         }
         const grid = getInitialGrid();
+        const node = grid[rowNew][colNew];
+        const newNode = {
+            ...node,
+        };
+        newNode.isSelected = true;
+        if(node.isStart){
+            document.getElementById(`node-${newNode.row}-${newNode.col}`).className =
+                'node node-highlightedStart';
+            newNode.isStart = true;
+        }
+        else if(node.isFinish){
+            document.getElementById(`node-${newNode.row}-${newNode.col}`).className =
+                'node node-highlightedFinish';
+            newNode.isFinish = true;
+        }
+        grid[rowNew][colNew] = newNode;
         this.setState({
             grid: grid,
             visitedNodes: grid
         });
-        const newNode = grid[rowNew][colNew];
-        if(newNode.isStart){
-            document.getElementById(`node-${newNode.row}-${newNode.col}`).className =
-                'node node-highlightedStart';
-        }
-        else if(newNode.isFinish){
-            document.getElementById(`node-${newNode.row}-${newNode.col}`).className =
-                'node node-highlightedFinish';
-        }
     }
 
     animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder) {
@@ -116,6 +124,10 @@ export default class PathfindingVisualizer extends Component {
         const {grid} = this.state;
         const startNode = grid[START_NODE_ROW][START_NODE_COL];
         const finishNode = grid[FINISH_NODE_ROW][FINISH_NODE_COL];
+        if(startNode.isSelected || finishNode.isSelected){
+            alert("Make sure you deselect the nodes before visualizing!");
+            return;
+        }
         const visitedNodesInOrder = dijkstra(grid, startNode, finishNode);
         const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
         this.setState({
@@ -137,7 +149,7 @@ export default class PathfindingVisualizer extends Component {
             }
             else {
                 document.getElementById(`node-${node.row}-${node.col}`).className =
-                    'node node-reset';
+                    'node node';
             }
         }
     }
@@ -148,7 +160,7 @@ export default class PathfindingVisualizer extends Component {
         return (
             <>
                 <button onClick={() => this.visualizeDijkstra()}>
-                    Visualize Dijkstra's Algorithm
+                    Visualize BFS
                 </button>
 
                 <button onClick={() => this.reset()}>
