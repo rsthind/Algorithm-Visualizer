@@ -24,7 +24,7 @@ export default class PathfindingVisualizer extends Component {
         const grid = getInitialGrid();
         this.setState({
             grid: grid,
-            visitedNodes: grid
+            visitedNodes: []
         });
     }
 
@@ -72,25 +72,23 @@ export default class PathfindingVisualizer extends Component {
             }
         }
         const grid = getInitialGrid();
-        const node = grid[rowNew][colNew];
         const newNode = {
-            ...node,
+            ...nodeInitial,
         };
-        newNode.isSelected = true;
-        if(node.isStart){
+        newNode.row = rowNew;
+        newNode.col = colNew;
+        if(newNode.isStart){
             document.getElementById(`node-${newNode.row}-${newNode.col}`).className =
                 'node node-highlightedStart';
-            newNode.isStart = true;
         }
-        else if(node.isFinish){
+        else if(newNode.isFinish){
             document.getElementById(`node-${newNode.row}-${newNode.col}`).className =
                 'node node-highlightedFinish';
-            newNode.isFinish = true;
         }
         grid[rowNew][colNew] = newNode;
         this.setState({
             grid: grid,
-            visitedNodes: grid
+            visitedNodes: []
         });
     }
 
@@ -137,6 +135,10 @@ export default class PathfindingVisualizer extends Component {
     }
 
     reset() {
+        START_NODE_ROW = 10;
+        START_NODE_COL = 15;
+        FINISH_NODE_ROW = 10;
+        FINISH_NODE_COL = 35;
         for(let i = 0;i<this.state.visitedNodes.length;i++){
             const node = this.state.visitedNodes[i];
             if(node.isStart){
@@ -152,6 +154,11 @@ export default class PathfindingVisualizer extends Component {
                     'node node';
             }
         }
+        const grid = getInitialGrid();
+        this.setState({
+            grid: grid,
+            visitedNodes: []
+        });
     }
 
     render() {
