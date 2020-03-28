@@ -6,7 +6,7 @@ import {dijkstra, getNodesInShortestPathOrder} from './Algorithms/dijkstra';
 import './AlgorithmVisualizer.css';
 
 var START_NODE_ROW = 10;
-var START_NODE_COL = 15;
+var START_NODE_COL = 10;
 var FINISH_NODE_ROW = 10;
 var FINISH_NODE_COL = 35;
 
@@ -17,7 +17,8 @@ export default class PathfindingVisualizer extends React.Component {
             grid: [],
             mouseIsPressed: false,
             visitedNodes: [],
-            wallNodes: []
+            wallNodes: [],
+            whichAlgorithm: ""
         };
     }
 
@@ -120,7 +121,7 @@ export default class PathfindingVisualizer extends React.Component {
     }
 
     visualizeDijkstra() {
-        const {grid} = this.state;
+        const grid = this.state.grid;
         const startNode = grid[START_NODE_ROW][START_NODE_COL];
         const finishNode = grid[FINISH_NODE_ROW][FINISH_NODE_COL];
         if(startNode.isSelected || finishNode.isSelected){
@@ -133,6 +134,13 @@ export default class PathfindingVisualizer extends React.Component {
             visitedNodes: visitedNodesInOrder
         });
         this.animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder);
+    }
+
+    handleAlgorithmChange= (selectedItem) => {
+        this.setState({
+            whichAlgorithm: "BFS",
+        });
+        this.visualizeDijkstra();
     }
 
     reset() {
@@ -164,18 +172,40 @@ export default class PathfindingVisualizer extends React.Component {
 
     render() {
         const {grid, mouseIsPressed} = this.state;
-
+        const options = [
+            {value: "BFS", label: "Visualize BFS"},
+            {value: "DFS", label: "Visualize DFS"}
+        ];
         return (
             <>
-                <button onClick={() => this.visualizeDijkstra()}>
-                    Visualize BFS
-                </button>
+                <div
+                    className = "dropdown"
+                    style = {{
+                        width: 250,
+                    }}
+                >
+                    <p align = "left">
+                        <Select
+                            options = {options}
+                            placeholder = "Visualize Algorithm"
+                            value = {this.state.whichAlgorithm}
+                            onChange = {this.handleAlgorithmChange}
+                        />
+                    </p>
+                </div>
 
-                <button onClick={() => this.reset()}>
-                    Reset Grid
-                </button>
-
-
+                <div
+                    className = "button"
+                    style = {{
+                        width: 250,
+                    }}
+                >
+                    <p align = "left">
+                        <button onClick={() => this.reset()}>
+                            Reset Grid
+                        </button>
+                    </p>
+                </div>
 
                 <div className="grid">
                     {grid.map((row, rowIdx) => {
