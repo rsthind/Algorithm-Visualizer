@@ -18,7 +18,7 @@ export default class PathfindingVisualizer extends React.Component {
             mouseIsPressed: false,
             visitedNodes: [],
             wallNodes: [],
-            whichAlgorithm: ""
+            whichAlgorithm: "Visualize Algorithm"
         };
     }
 
@@ -26,7 +26,8 @@ export default class PathfindingVisualizer extends React.Component {
         const grid = getInitialGrid();
         this.setState({
             grid: grid,
-            visitedNodes: []
+            visitedNodes: [],
+            whichAlgorithm:"Visualize Algorithm",
         });
     }
 
@@ -141,7 +142,7 @@ export default class PathfindingVisualizer extends React.Component {
             whichAlgorithm: "BFS",
         });
         this.visualizeDijkstra();
-    }
+    };
 
     reset() {
         START_NODE_ROW = 10;
@@ -173,8 +174,8 @@ export default class PathfindingVisualizer extends React.Component {
     render() {
         const {grid, mouseIsPressed} = this.state;
         const options = [
-            {value: "BFS", label: "Visualize BFS"},
-            {value: "DFS", label: "Visualize DFS"}
+            {value: "BFS", label: "BFS"},
+            {value: "DFS", label: "DFS"}
         ];
         return (
             <>
@@ -188,7 +189,7 @@ export default class PathfindingVisualizer extends React.Component {
                         <Select
                             options = {options}
                             placeholder = "Visualize Algorithm"
-                            value = {this.state.whichAlgorithm}
+                            value={{value: this.state.whichAlgorithm, label: this.state.whichAlgorithm}}
                             onChange = {this.handleAlgorithmChange}
                         />
                     </p>
