@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React from 'react';
+import Select from 'react-select';
 import Node from './Node/Node';
 import {dijkstra, getNodesInShortestPathOrder} from './Algorithms/dijkstra';
 
@@ -9,7 +10,7 @@ var START_NODE_COL = 15;
 var FINISH_NODE_ROW = 10;
 var FINISH_NODE_COL = 35;
 
-export default class PathfindingVisualizer extends Component {
+export default class PathfindingVisualizer extends React.Component {
     constructor() {
         super();
         this.state = {
