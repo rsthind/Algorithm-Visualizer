@@ -51,6 +51,11 @@ export default class PathfindingVisualizer extends React.Component {
         const nodeInitial = this.state.grid[row][col];
         let rowNew = row;
         let colNew = col;
+        if(!nodeInitial.isStart && !nodeInitial.isFinish){
+            alert("Remember that you can only move the start and end nodes! Try selecting the green or red grid squares" +
+                "on the screen before moving.");
+            return;
+        }
         if(nodeInitial.isSelected){
             if(e.keyCode === 37){
                 colNew -= 1;
@@ -73,6 +78,10 @@ export default class PathfindingVisualizer extends React.Component {
                 FINISH_NODE_ROW = rowNew;
                 FINISH_NODE_COL = colNew;
             }
+        }
+        if(this.state.grid[rowNew][colNew].isWall){
+            alert("Can't move start and end nodes to existing wall! Try moving elsewhere.");
+            return;
         }
         const grid = getInitialGrid();
         const newNode = {
