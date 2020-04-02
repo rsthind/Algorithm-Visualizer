@@ -4,10 +4,10 @@ BFS visualizer that visualizes the Breath-First-Search algorithm from the start 
 # Screenshots
 Before the BFS Visualizer is run
 <p class="first_row "align="center">
-  <img src = "res/Before.png" alt = "drawing" width="200"/>
+  <img src = "res/Before.png" alt = "drawing" width="3360"/>
 </p>
 
 After the BFS Visualizer is run
 <p class="first_row "align="center">
-    <img src = "res/After.png" alt = "drawing" width="200"/>
+    <img src = "res/After.png" alt = "drawing" width="3360"/>
 </p>
