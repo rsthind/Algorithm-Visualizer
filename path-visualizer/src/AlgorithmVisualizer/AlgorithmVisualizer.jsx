@@ -176,7 +176,8 @@ export default class PathfindingVisualizer extends React.Component {
         const grid = getInitialGrid();
         this.setState({
             grid: grid,
-            visitedNodes: []
+            visitedNodes: [],
+            whichAlgorithm: "Visualize Algorithm"
         });
     }
 
