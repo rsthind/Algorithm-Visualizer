@@ -10,6 +10,11 @@ var START_NODE_COL = 10;
 var FINISH_NODE_ROW = 10;
 var FINISH_NODE_COL = 35;
 
+const UP_KEY = 38;
+const DOWN_KEY = 40;
+const LEFT_KEY = 37;
+const RIGHT_KEY = 39;
+
 export default class PathfindingVisualizer extends React.Component {
     constructor() {
         super();
@@ -56,17 +61,17 @@ export default class PathfindingVisualizer extends React.Component {
                 "on the screen before moving.");
             return;
         }
-        if(nodeInitial.isSelected){
-            if(e.keyCode === 37){
+        if (nodeInitial.isSelected) {
+            if (e.keyCode === LEFT_KEY) {
                 colNew -= 1;
             }
-            else if(e.keyCode === 38){
+            else if (e.keyCode === UP_KEY) {
                 rowNew -= 1;
             }
-            else if(e.keyCode === 39){
+            else if (e.keyCode === RIGHT_KEY) {
                 colNew += 1;
             }
-            else if(e.keyCode === 40){
+            else if (e.keyCode === DOWN_KEY) {
                 rowNew += 1;
 
             }
@@ -154,10 +159,6 @@ export default class PathfindingVisualizer extends React.Component {
     };
 
     reset() {
-        START_NODE_ROW = 10;
-        START_NODE_COL = 15;
-        FINISH_NODE_ROW = 10;
-        FINISH_NODE_COL = 35;
         for(let i = 0;i<this.state.visitedNodes.length;i++){
             const node = this.state.visitedNodes[i];
             if(node.isStart){
@@ -190,8 +191,9 @@ export default class PathfindingVisualizer extends React.Component {
         return (
             <>
                 <div
-                    className = "dropdown"
-                    style = {{
+                    className="dropdown"
+                    //todo: change CSS style to make relative instead of absolute
+                    style={{
                         width: 250,
                     }}
                 >
@@ -206,7 +208,9 @@ export default class PathfindingVisualizer extends React.Component {
                 </div>
 
                 <div
-                    className = "button"
+                    className="button"
+                    //todo: change CSS style to make relative instead of absolute
+
                     style = {{
                         width: 250,
                     }}
